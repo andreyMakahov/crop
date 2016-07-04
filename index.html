@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
+  	<script   src="https://code.jquery.com/jquery-3.0.0.js"   integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo="   crossorigin="anonymous"></script>
+  <script type="text/javascript" src="jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.pack.js"></script>
+  </head>
+  <body>
+    <input type="file" onchange="previewFile()"><br>
+
+	<img src="" alt="Image preview...">   
+
+	<div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display: inline-block;position: relative;">
+		<canvas id="myCanvas100" width="100" height="100"></canvas>
+	</div>
+	<div style="width:80px;height:80px;border-radius:50%;overflow:hidden;display: inline-block;position: relative;">
+		<canvas id="myCanvas80" width="80" height="80"></canvas>
+	</div>
+
+	<script>
+		function previewFile() {
+		  var preview = document.querySelector('img');
+		  var file    = document.querySelector('input[type=file]').files[0];
+		  var reader  = new FileReader();
+
+		  reader.onloadend = function () {
+		    preview.src = reader.result;
+
+			window.canvas100 = document.getElementById('myCanvas100');
+			var canvas80 = document.getElementById('myCanvas80');
+			var context100 = canvas100.getContext('2d');
+			var context80 = canvas80.getContext('2d');
+			var imageObj = new Image();
+
+			imageObj.src = reader.result;
+
+		     $('img').imgAreaSelect({
+		        handles: true,
+		        aspectRatio: '1:1',
+		        minHeigth: 100,
+		        minWidth: 100,
+		        onSelectChange: function(img, options) {
+		        	context100.clearRect(0,0,100,100);
+		        	context80.clearRect(0,0,80,80);
+        	      	context100.drawImage(imageObj, options.x1, options.y1, options.width, options.height, 0, 0, 100, 100);
+        	      	context80.drawImage(imageObj, options.x1, options.y1, options.width, options.height, 0, 0, 80, 80);
+		        }
+		    });
+		  }
+
+		  if (file) {
+		    reader.readAsDataURL(file);
+		  } else {
+		    preview.src = "";
+		  }
+		}
+		
+	</script>
+  </body>
+</html>
